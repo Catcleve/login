@@ -1,37 +1,133 @@
-## Welcome to GitHub Pages
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
 
-You can use the [editor on GitHub](https://github.com/Catcleve/login/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+		#main {
+			width: 980px;
+			margin: 0 auto;
+		}
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+		#form_box {
+			padding: 20px;
+			margin-bottom: 20px;
+			border: 1px solid #cdcdcd;
+		}
 
-### Markdown
+		#message {
+			width: 100%;
+			/*font-size: 22px;*/
+		}
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+		#message_box {
+			display: none;
+			padding: 20px;
+			border: 1px solid #cdcdcd;
+		}
 
-```markdown
-Syntax highlighted code block
+		#send, #delete {
+			float: right;
+		}
+		
+		.msg {
+			border: 1px solid ;		
+			margin-bottom: 20px;	
+			position: relative;
+			padding-bottom: 10px;
+		}
+		
+		.msg span {
+			display: inline-block;
+			padding:15px;
+		}
+		.msg a {
+			position: absolute;
+			bottom: 5px;
+			right: 5px;
+		}
 
-# Header 1
-## Header 2
-### Header 3
+	</style>
+</head>
+<body>
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
+	<div id="main">
+		<form id="form_box">
+			<h2>有什么新鲜事想告诉大家？</h2>
+			<textarea id="message" cols="20" rows="8"></textarea>
+			<p>还可以输入<span id="count">340</span>个字 <input type="button" id="send" value="发布"></p>
 
-**Bold** and _Italic_ and `Code` text
+		</form>
 
-[Link](url) and ![Image](src)
-```
+		<div id="message_box" >
+			<!-- <div class="msg"><span></span><a class="delete" href="#">删除</a></div> -->
+		</div>		
+	</div>
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Jekyll Themes
+	<script>
+		// 获取对象
+		var e_message = document.getElementById("message");
+		var e_send = document.getElementById("send");
+		var e_count = document.getElementById("count");
+		var e_deltet = document.getElementById("delete");
+		var e_message_box = document.getElementById("message_box")
+		// 获取输入框监听事件
+		e_message.oninput = function () {
+			// 如果大于340个字，需要只显示前面的文字
+			// var input_value = e_message.value;
+			if (e_message.value.length > 340) {
+			 	e_message.value = e_message.value.substring(0,340);
+			 	// 先用3个测试一下下
+			 	// input_value = e_message.value.substring(0,3);
+			 	// e_message.value = input_value;
+			}
+			 // 打印测试一下
+			 	// console.log(e_message.value);
+			 // 修改可输入字数
+			e_count.innerHTML = 340 - e_message.value.length;
+		}
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Catcleve/login/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+		// 获取点击发布事件
+		e_send.onclick = function () {			 
+			//用输入的内容建立新的元素
+			if (e_message.value.length > 0) {
+				// statement
+				var div_msg = document.createElement("div");
+				div_msg.setAttribute("class", "msg");
+				var span_msg = document.createElement("span");
+				span_msg.innerHTML = e_message.value;
+				var a_msg = document.createElement("a");
+				a_msg.innerHTML = "删除";
+				a_msg.setAttribute("id", "delete");
+				a_msg.setAttribute("href", 'javascript:');
+				// 添加元素
+				div_msg.appendChild(span_msg);
+				div_msg.appendChild(a_msg);
+				// 判断messagebox是否为空
+				if (e_message_box.children.length > 0) {
+					var first = e_message_box.firstElementChild;
+				}else {
+					e_message_box.style.display = "block";
+				}
 
-### Support or Contact
+				e_message_box.insertBefore(div_msg,first);
+				 // 输入框归零
+				e_message.value = "";
+				 // 字数变为340
+				e_count.innerHTML = "340";
+			}
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+			// 获取删除事件
+			a_msg.onclick = function () {
+				e_message_box.removeChild(div_msg);
+				if (e_message_box.children.length == 0) {
+					e_message_box.style.display = "none";				 	
+				}
+			}
+		}
+	</script>
+</body>
+</html>
